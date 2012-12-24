@@ -13,6 +13,8 @@ from threading import Thread
 
 from lxml.html import fromstring, tostring
 
+from PyQt4.Qt import QDate
+
 from calibre.ebooks.metadata.book.base import Metadata
 from calibre.library.comments import sanitize_comments_html
 from calibre.utils.cleantext import clean_ascii_chars
@@ -361,7 +363,7 @@ class Worker(Thread): # Get details
             if '(first' in publisher_node_text:
                 # For the publication date we will use first published date
                 # Note this date could be just a year, or it could be monthname year
-                pubdate_text_match = re.search('.*\(first published ([\w\s]+)', publisher_node_text)
+                pubdate_text_match = re.search('.*\(first published ([-\w\s]+)', publisher_node_text)
                 if pubdate_text_match is not None:
                     first_pubdate_text = pubdate_text_match.groups(0)[0]
                     if pubdate_text and first_pubdate_text[-4:] == pubdate_text[-4:]:
@@ -418,4 +420,4 @@ class Worker(Thread): # Get details
             if len(text_parts[2]) > 0:
                 day = int(re.match('([0-9]+)', text_parts[2]).groups(0)[0])
         from calibre.utils.date import utc_tz
-        return datetime.datetime(year, month, day, tzinfo=utc_tz)
+        return QDate(year, month, day)
